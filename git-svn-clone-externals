@@ -124,6 +124,11 @@ do
             remote_url="${remote_url/+(http|https)/svn+ssh}"
         fi
 
+        # Only clone the most recent revision if no revision is specified
+        if [ -z $revision ]; then
+            revision='-r'`svn info "$remote_url" | grep '^Last Changed Rev:' | awk '{print $4}'`
+        fi
+
         [ -z "${remote_url}" ] && continue
 
         export local_directory revision remote_url
